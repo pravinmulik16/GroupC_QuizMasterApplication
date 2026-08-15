@@ -11,7 +11,7 @@ public final class DatabaseConfig {
     private static final String DATABASE_URL = System.getenv().getOrDefault(
             "DB_URL", "jdbc:mysql://127.0.0.1:3306/");
     private static final String USERNAME = System.getenv().getOrDefault("DB_USERNAME", "root");
-
+    private static final String PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "");
     private static Connection connection;
 
     private DatabaseConfig() {
@@ -19,11 +19,7 @@ public final class DatabaseConfig {
 
     public static synchronized Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
-            String password = System.getenv("DB_PASSWORD");
-            if (password == null) {
-                throw new SQLException("DB_PASSWORD environment variable is not set.");
-            }
-            connection = DriverManager.getConnection(DATABASE_URL, USERNAME, password);
+            connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
             createDatabaseIfNotExists(connection);
             createTablesIfNotExist(connection);
         }
