@@ -3,100 +3,78 @@ package com.database.config;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
-import static java.text.Collator.PRIMARY;
+public final class DatabaseConfig {
 
-public class DatabaseConfig {
+    private static final String DATABASE_NAME = "QuizMaster";
+    private static final String DATABASE_URL = System.getenv().getOrDefault(
+            "DB_URL", "jdbc:mysql://127.0.0.1:3306/");
+    private static final String USERNAME = System.getenv().getOrDefault("DB_USERNAME", "root");
 
-    private static Connection connnection;
+    private static Connection connection;
 
-    private static Connection getConnection() throws SQLException {
-        try {
-            if (connnection == null) {
+    private DatabaseConfig() {
+    }
 
-
-                connnection = DriverManager.getConnection(
-                        "//127.0.0.1:3306",
-                        "root",
-                        "Ume$h2896"
-                );
-                createDatabaseIfNotExists(connnection, "QuizMaster");
-                createTableIfNotExists(connnection, "QuizMaster");
+    public static synchronized Connection getConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            String password = System.getenv("DB_PASSWORD");
+            if (password == null) {
+                throw new SQLException("DB_PASSWORD environment variable is not set.");
             }
-        } catch (Exception exception) {
-            exception.printStackTrace();
+            connection = DriverManager.getConnection(DATABASE_URL, USERNAME, password);
+            createDatabaseIfNotExists(connection);
+            createTablesIfNotExist(connection);
         }
-        return connnection;
-
+        return connection;
     }
 
-    private static void useDatabase(Connection connnection, String quizMaster) {
-        try {
-            connnection.createStatement().executeUpdate("USE " + quizMaster);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    private static void createDatabaseIfNotExists(Connection connnection, String QuizMaster) {
-        
-        try {
-            String sql = "CREATE DATABASE IF NOT EXISTS " + QuizMaster;
-            connnection.createStatement().executeUpdate(sql);
-            useDatabase(connnection, QuizMaster);
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private static void useDatabase(Connection connection) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("USE " + DATABASE_NAME);
         }
     }
 
-    private static void createTableIfNotExists(Connection connnection, String quizMaster) {
-        useDatabase(connnection, quizMaster);
-
-
-        try {
-            String sql = "CREATE TABLE IF NOT EXISTS question (" +
-                    "id INT AUTO_INCREMENT PRIMARY KEY," +
-                    "question_text TEXT," +
-                    "option1 VARCHAR(100)," +
-                    "option2 VARCHAR(100)," +
-                    "option3 VARCHAR(100)," +
-                    "option4 VARCHAR(100)," +
-                    "correct_option INT" +
-                    ")";
-            connnection.createStatement().executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private static void createDatabaseIfNotExists(Connection connection) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME);
         }
-
-        try {
-            String sql = "CREATE TABLE IF NOT EXISTS student (" +
-                    "id INT AUTO_INCREMENT PRIMARY KEY," +
-                    "First_name VARCHAR(100)," +
-                    "Last_Name VARCHAR(100)," +
-                    "Email VARCHAR(100) PRIMARY KEY," +
-                    "Username VARCHAR(100) UNIQUE," +
-                    "Password VARCHAR(100) Encrypted," +
-                    "City VARCHAR(100)," +
-                    "Phone_Number VARCHAR(15)" +
-                    ")";
-            connnection.createStatement().executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try{
-            String sql = "CREATE TABLE IF NOT EXISTS score (" +
-
-                    "student_id INT," +
-                    "Totalscore INT," +
-                    "FOREIGN KEY (student_id) REFERENCES student(id)" +
-                    "grade VARCHAR(10)"+
-                    ")";
-            connnection.createStatement().executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        useDatabase(connection);
     }
 
+    private static void createTablesIfNotExist(Connection connection) throws SQLException {
+        useDatabase(connection);
+
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS question ("
+                    + "id INT AUTO_INCREMENT PRIMARY KEY,"
+                    + "question_text TEXT NOT NULL,"
+                    + "option1 VARCHAR(100) NOT NULL,"
+                    + "option2 VARCHAR(100) NOT NULL,"
+                    + "option3 VARCHAR(100) NOT NULL,"
+                    + "option4 VARCHAR(100) NOT NULL,"
+                    + "correct_option INT NOT NULL,"
+                    + "CHECK (correct_option BETWEEN 1 AND 4)"
+                    + ")");
+
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS student ("
+                    + "id INT AUTO_INCREMENT PRIMARY KEY,"
+                    + "first_name VARCHAR(100) NOT NULL,"
+                    + "last_name VARCHAR(100) NOT NULL,"
+                    + "username VARCHAR(100) NOT NULL UNIQUE,"
+                    + "password VARCHAR(255) NOT NULL,"
+                    + "city VARCHAR(100),"
+                    + "email VARCHAR(100) NOT NULL UNIQUE,"
+                    + "mobile VARCHAR(15)"
+                    + ")");
+
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS score ("
+                    + "student_id INT NOT NULL,"
+                    + "total_score INT NOT NULL,"
+                    + "grade VARCHAR(10),"
+                    + "FOREIGN KEY (student_id) REFERENCES student(id)"
+                    + ")");
+        }
+    }
 }
-
-
