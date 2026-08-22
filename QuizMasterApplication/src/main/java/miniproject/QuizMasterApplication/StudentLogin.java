@@ -9,7 +9,7 @@ public class StudentLogin {
 
     public StudentQuiz studentQuiz;
 
-    public void getStudentLogin() throws SQLException{
+    public void getStudentLogin() {
 
 //        DBConnection db = new DBConnection();
 //        Connection con = db.getConnectionDetails();
@@ -51,7 +51,7 @@ public class StudentLogin {
         } else if (!u_name.equals(existingUserCheck.dbUsername)) {
             System.out.println("Username is not registered -> Please Proceed with Registration");
             InsertData insertData = new InsertData();
-            insertData.insertStudentData(studentRegistration);
+            insertData.insertStudentData();
         }
     }
 }
