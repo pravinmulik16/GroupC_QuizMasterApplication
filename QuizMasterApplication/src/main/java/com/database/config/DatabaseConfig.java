@@ -14,6 +14,7 @@ public final class DatabaseConfig {
     private static final String PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "");
     private static Connection connection;
 
+    // Prevents instantiation of this utility class
     private DatabaseConfig() {
     }
 
@@ -43,17 +44,19 @@ public final class DatabaseConfig {
         useDatabase(connection);
 
         try (Statement statement = connection.createStatement()) {
+            // 1. Question Table
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS question ("
                     + "id INT AUTO_INCREMENT PRIMARY KEY,"
                     + "question_text TEXT NOT NULL,"
-                    + "option1 VARCHAR(100) NOT NULL,"
-                    + "option2 VARCHAR(100) NOT NULL,"
-                    + "option3 VARCHAR(100) NOT NULL,"
-                    + "option4 VARCHAR(100) NOT NULL,"
+                    + "option1 VARCHAR(255) NOT NULL," // Increased length for longer choices
+                    + "option2 VARCHAR(255) NOT NULL,"
+                    + "option3 VARCHAR(255) NOT NULL,"
+                    + "option4 VARCHAR(255) NOT NULL,"
                     + "correct_option INT NOT NULL,"
                     + "CHECK (correct_option BETWEEN 1 AND 4)"
                     + ")");
 
+            // 2. Student Table
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS student ("
                     + "id INT AUTO_INCREMENT PRIMARY KEY,"
                     + "first_name VARCHAR(100) NOT NULL,"
@@ -62,14 +65,15 @@ public final class DatabaseConfig {
                     + "password VARCHAR(255) NOT NULL,"
                     + "city VARCHAR(100),"
                     + "email VARCHAR(100) NOT NULL UNIQUE,"
-                    + "mobile VARCHAR(15)"
+                    + "mobile VARCHAR(10) NOT NULL" // Restricted to 10 digits per BRD specs
                     + ")");
 
+            // 3. Score Table
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS score ("
-                    + "student_id INT NOT NULL,"
+                    + "student_id INT PRIMARY KEY," // Made Primary Key to ensure data uniqueness
                     + "total_score INT NOT NULL,"
-                    + "grade VARCHAR(10),"
-                    + "FOREIGN KEY (student_id) REFERENCES student(id)"
+                    + "grade VARCHAR(2) NOT NULL,"
+                    + "FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE"
                     + ")");
         }
     }
