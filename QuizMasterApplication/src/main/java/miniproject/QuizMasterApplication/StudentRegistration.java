@@ -9,7 +9,7 @@ public class StudentRegistration {
 	private String Password;
 	private String city;
 	private String email;
-	private int mobile;
+	private long mobile;
 	
 	public int getId() {
 		return id;
@@ -53,10 +53,10 @@ public class StudentRegistration {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public int getMobile() {
+	public long getMobile() {
 		return mobile;
 	}
-	public void setMobile(int mobile) {
+	public void setMobile(long mobile) {
 		this.mobile = mobile;
 	}
 	@Override
@@ -66,7 +66,7 @@ public class StudentRegistration {
 				+ ", mobile=" + mobile + "]";
 	}
 	public StudentRegistration(int id, String first_name, String last_name, String username, String password,
-			String city, String email, int mobile) {
+			String city, String email, long mobile) {
 		super();
 		this.id = id;
 		this.first_name = first_name;
