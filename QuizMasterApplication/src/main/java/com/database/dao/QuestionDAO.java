@@ -10,11 +10,7 @@ import java.util.List;
 
 public class QuestionDAO {
 
-    /**
-     * Fetches all available questions from the database, shuffles them randomly,
-     * and returns exactly 10 questions for the quiz session.
-     * Fulfills User Story 2.1 and User Story 7.1.
-     */
+
     public List<Question> getRandomQuizQuestions() throws SQLException {
         List<Question> questionList = new ArrayList<>();
         String query = "SELECT id, question_text, option1, option2, option3, option4, correct_option FROM question";
@@ -36,19 +32,16 @@ public class QuestionDAO {
             }
         }
 
-        // Shuffle the list to randomize order per User Story 7.1
+
         Collections.shuffle(questionList);
 
-        // Safely return exactly 10 items (or fewer if database has less than 10)
+
         return questionList.subList(0, Math.min(questionList.size(), 10));
     }
 
-    /**
-     * Saves or replaces a student's final quiz score and calculation grade.
-     * Fulfills User Story 2.2.
-     */
+
     public boolean saveOrUpdateScore(Score score) throws SQLException {
-        // Use standard "INSERT ... ON DUPLICATE KEY UPDATE" to handle updates seamlessly
+
         String query = "INSERT INTO score (student_id, total_score, grade) VALUES (?, ?, ?) " +
                 "ON DUPLICATE KEY UPDATE total_score = VALUES(total_score), grade = VALUES(grade)";
 

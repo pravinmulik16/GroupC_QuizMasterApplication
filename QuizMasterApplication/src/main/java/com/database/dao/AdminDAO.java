@@ -6,17 +6,13 @@ import java.sql.*;
 
 public class AdminDAO {
 
-    /**
-     * Verifies that the exact question statement text doesn't already exist,
-     * then commits new problem structures to database persistence tiers.
-     * Fulfills User Story 3.1 and User Story 6.1.
-     */
+
     public boolean addQuestion(Question q) throws SQLException {
         String checkQuery = "SELECT COUNT(*) FROM question WHERE question_text = ?";
         String insertQuery = "INSERT INTO question (question_text, option1, option2, option3, option4, correct_option) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConfig.getConnection()) {
-            // Check for duplication to prevent redundancies
+
             try (PreparedStatement checkStmt = conn.prepareStatement(checkQuery)) {
                 checkStmt.setString(1, q.getQuestionText());
                 try (ResultSet rs = checkStmt.executeQuery()) {
@@ -26,7 +22,7 @@ public class AdminDAO {
                     }
                 }
             }
-            // Execute safe parametrized insert
+
             try (PreparedStatement insertStmt = conn.prepareStatement(insertQuery)) {
                 insertStmt.setString(1, q.getQuestionText());
                 insertStmt.setString(2, q.getOption1());
@@ -39,10 +35,7 @@ public class AdminDAO {
         }
     }
 
-    /**
-     * Updates text options and valid target responses based on a target tracking code.
-     * Fulfills User Story 6.2.
-     */
+
     public boolean editQuestion(Question q) throws SQLException {
         String query = "UPDATE question SET question_text=?, option1=?, option2=?, option3=?, option4=?, correct_option=? WHERE id=?";
         try (Connection conn = DatabaseConfig.getConnection();
@@ -58,10 +51,7 @@ public class AdminDAO {
         }
     }
 
-    /**
-     * Removes structural entities from storage pools based on identification indexes.
-     * Fulfills User Story 6.3.
-     */
+
     public boolean deleteQuestion(int id) throws SQLException {
         String query = "DELETE FROM question WHERE id = ?";
         try (Connection conn = DatabaseConfig.getConnection();
@@ -71,10 +61,7 @@ public class AdminDAO {
         }
     }
 
-    /**
-     * Gathers all performance metrics and logs rows in ascending value format.
-     * Fulfills User Story 3.2.
-     */
+
     public void viewAllStudentScores() throws SQLException {
         String query = "SELECT s.id, CONCAT(s.first_name, ' ', s.last_name) AS name, sc.total_score, sc.grade " +
                 "FROM student s JOIN score sc ON s.id = sc.student_id ORDER BY sc.total_score ASC";
@@ -95,10 +82,7 @@ public class AdminDAO {
         }
     }
 
-    /**
-     * Looks up performance evaluations based on standard student sequence numbers.
-     * Fulfills User Story 3.3.
-     */
+
     public void fetchScoreByStudentId(int studentId) throws SQLException {
         String query = "SELECT total_score, grade FROM score WHERE student_id = ?";
         try (Connection conn = DatabaseConfig.getConnection();
@@ -115,10 +99,7 @@ public class AdminDAO {
         }
     }
 
-    /**
-     * Locates maximum grade results and prints associated profiles.
-     * Fulfills User Story 5.2.
-     */
+
     public void viewTopScorer() throws SQLException {
         String query = "SELECT CONCAT(s.first_name, ' ', s.last_name) AS name, sc.total_score, sc.grade " +
                 "FROM student s JOIN score sc ON s.id = sc.student_id " +

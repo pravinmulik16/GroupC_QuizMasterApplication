@@ -23,7 +23,7 @@ public class QuizMasterApp {
 
     public static void main(String[] args) {
         while (true) {
-            System.out.println("\n=========================================");
+            System.out.println("=========================================");
             System.out.println("   WELCOME TO QUIZMASTER APPLICATION     ");
             System.out.println("=========================================");
             System.out.println("1. Student Portal");
@@ -48,12 +48,10 @@ public class QuizMasterApp {
         }
     }
 
-    // ==========================================
-    //            STUDENT PORTAL LAYER
-    // ==========================================
+
     private static void showStudentMenu() {
         while (true) {
-            System.out.println("\n--- Student Portal Menu ---");
+            System.out.println("--- Student Portal Menu ---");
             System.out.println("1. Register New Account");
             System.out.println("2. Login & Start Java Quiz");
             System.out.println("3. View My Historic Score");
@@ -86,7 +84,7 @@ public class QuizMasterApp {
     }
 
     private static void handleStudentRegistration() throws SQLException {
-        System.out.println("\n=== Student Registration Form ===");
+        System.out.println("=== Student Registration Form ===");
         System.out.print("Enter First Name: "); String fName = scanner.nextLine();
         System.out.print("Enter Last Name: "); String lName = scanner.nextLine();
         System.out.print("Enter Username: "); String username = scanner.nextLine();
@@ -95,7 +93,7 @@ public class QuizMasterApp {
         System.out.print("Enter Email ID (abc@xyz.com): "); String email = scanner.nextLine();
         System.out.print("Enter Mobile Number (10 digits): "); String mobile = scanner.nextLine();
 
-        // BRD US 4.1 Check fields empty
+
         if (InputValidator.isEmpty(fName) || InputValidator.isEmpty(lName) || InputValidator.isEmpty(username)
                 || InputValidator.isEmpty(password) || InputValidator.isEmpty(city)
                 || InputValidator.isEmpty(email) || InputValidator.isEmpty(mobile)) {
@@ -103,7 +101,7 @@ public class QuizMasterApp {
             return;
         }
 
-        // BRD US 4.1 Custom layout match checks
+
         if (!InputValidator.isValidEmail(email)) {
             System.out.println("Registration Failed: Email formatting layout is invalid!");
             return;
@@ -117,7 +115,7 @@ public class QuizMasterApp {
             return;
         }
 
-        // BRD US 4.2 Duplicate username protection check
+
         if (studentDAO.isUsernameDuplicate(username)) {
             System.out.println("Conflict Error: The username '" + username + "' is already taken!");
             return;
@@ -178,12 +176,12 @@ public class QuizMasterApp {
             questionNumber++;
         }
 
-        // BRD US 2.2 / 5.1 Reporting & Processing Summaries
+
         int wrongAnswersCount = questions.size() - correctAnswersCount;
         String finalGrade = scoreDAO.calculateGrade(correctAnswersCount);
         String feedback = scoreDAO.getFeedbackMessage(finalGrade);
 
-        System.out.println("\n=== Display Quiz Summary ===");
+        System.out.println("=== Display Quiz Summary ===");
         System.out.println("Total Questions: " + questions.size());
         System.out.println("Correct Answers: " + correctAnswersCount);
         System.out.println("Wrong Answers  : " + wrongAnswersCount);
@@ -203,12 +201,10 @@ public class QuizMasterApp {
         studentDAO.viewStudentScore(username, password);
     }
 
-    // ==========================================
-    //             ADMIN PORTAL LAYER
-    // ==========================================
+
     private static void showAdminMenu() {
         while (true) {
-            System.out.println("\n--- Admin Management Operations ---");
+            System.out.println("--- Admin Management Operations ---");
             System.out.println("1. Add New Quiz Question");
             System.out.println("2. Edit Existing Question Record");
             System.out.println("3. Delete Target Question Entry");
@@ -315,24 +311,22 @@ public class QuizMasterApp {
         }
     }
 
-    // ==========================================
-    //           UTILITY SAFETY WRAPPERS
-    // ==========================================
+
     private static int readIntSafe() {
         while (true) {
             try {
                 int input = scanner.nextInt();
-                scanner.nextLine(); // Clear the newline
+                scanner.nextLine();
                 return input;
             } catch (Exception e) {
                 System.out.print("Input error! Please enter a valid number: ");
-                scanner.nextLine(); // Evacuate garbage token entries trapped in scanner caches.
+                scanner.nextLine();
             }
         }
     }
 
     private static boolean promptContinue(String portalName) {
-        // BRD US 8.1 Exit and Retry navigation loop controls
+
         System.out.print("\nDo you want to continue in " + portalName + "? (Y/N): ");
         String selection = scanner.nextLine().trim();
         return selection.equalsIgnoreCase("Y");

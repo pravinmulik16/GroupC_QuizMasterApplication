@@ -9,10 +9,7 @@ import java.sql.SQLException;
 
 public class StudentDAO {
 
-    /**
-     * Checks if a username already exists in the database.
-     * Fulfills User Story 4.2 (Prevent Duplicate Usernames).
-     */
+
     public boolean isUsernameDuplicate(String username) throws SQLException {
         String query = "SELECT COUNT(*) FROM student WHERE username = ?";
         try (Connection conn = DatabaseConfig.getConnection();
@@ -27,10 +24,7 @@ public class StudentDAO {
         return false;
     }
 
-    /**
-     * Inserts a new student profile record into the MySQL database.
-     * Fulfills User Story 1.1 (Student Registration).
-     */
+
     public boolean registerStudent(Student student) throws SQLException {
         String query = "INSERT INTO student (first_name, last_name, username, password, city, email, mobile) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConfig.getConnection();
