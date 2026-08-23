@@ -85,13 +85,20 @@ public class QuizMasterApp {
 
     private static void handleStudentRegistration() throws SQLException {
         System.out.println("=== Student Registration Form ===");
-        System.out.print("Enter First Name: "); String fName = scanner.nextLine();
-        System.out.print("Enter Last Name: "); String lName = scanner.nextLine();
-        System.out.print("Enter Username: "); String username = scanner.nextLine();
-        System.out.print("Enter Password (Min 6 chars): "); String password = scanner.nextLine();
-        System.out.print("Enter City: "); String city = scanner.nextLine();
-        System.out.print("Enter Email ID (abc@xyz.com): "); String email = scanner.nextLine();
-        System.out.print("Enter Mobile Number (10 digits): "); String mobile = scanner.nextLine();
+        System.out.print("Enter First Name: ");
+        String fName = scanner.nextLine();
+        System.out.print("Enter Last Name: ");
+        String lName = scanner.nextLine();
+        System.out.print("Enter Username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter Password (Min 6 chars): ");
+        String password = scanner.nextLine();
+        System.out.print("Enter City: ");
+        String city = scanner.nextLine();
+        System.out.print("Enter Email ID (abc@xyz.com): ");
+        String email = scanner.nextLine();
+        System.out.print("Enter Mobile Number (10 digits): ");
+        String mobile = scanner.nextLine();
 
 
         if (InputValidator.isEmpty(fName) || InputValidator.isEmpty(lName) || InputValidator.isEmpty(username)
@@ -129,8 +136,10 @@ public class QuizMasterApp {
 
     private static void handleStudentLoginAndQuiz() throws SQLException {
         System.out.println("\n=== Student Authentication Portal ===");
-        System.out.print("Enter Username: "); String username = scanner.nextLine();
-        System.out.print("Enter Password: "); String password = scanner.nextLine();
+        System.out.print("Enter Username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter Password: ");
+        String password = scanner.nextLine();
 
         int studentId = studentDAO.loginStudent(username, password);
         if (studentId == -1) {
@@ -196,8 +205,10 @@ public class QuizMasterApp {
 
     private static void handleViewStudentScore() throws SQLException {
         System.out.println("\n=== View Quiz Result ===");
-        System.out.print("Enter Username: "); String username = scanner.nextLine();
-        System.out.print("Enter Password: "); String password = scanner.nextLine();
+        System.out.print("Enter Username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter Password: ");
+        String password = scanner.nextLine();
         studentDAO.viewStudentScore(username, password);
     }
 

@@ -14,22 +14,27 @@ public class Score {
     }
 
     public int getStudentId() {
+
         return studentId;
     }
 
     public void setStudentId(int studentId) {
+
         this.studentId = studentId;
     }
 
     public int getTotalScore() {
+
         return totalScore;
     }
 
     public void setTotalScore(int totalScore) {
+
         this.totalScore = totalScore;
     }
 
     public String getGrade() {
+
         return grade;
     }
 
